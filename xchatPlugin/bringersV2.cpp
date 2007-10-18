@@ -26,10 +26,89 @@
 #include <cstring>
 #include <cstdlib>
 #include <ctime>
+#include "xchat-plugin.h"
+static xchat_plugin *ph;
 #include "bringersV2.h"
 
 using namespace std;
 
+int sorteio ( char *word[], char *word_eol[], void *userdata )
+{
+	string teste;
+	if ( !userdata )
+	{
+		char *cteste;
+		teste = word[4];
+		teste = teste.substr(1);
+		cteste = xchat_strip(ph, teste.c_str(), -1, 1|2 );
+		if ( !cteste )
+			return XCHAT_EAT_NONE;
+		teste = cteste;
+		xchat_free(ph, cteste);
+
+		if ( teste != "!sorteia" )
+			return XCHAT_EAT_NONE;
+	}
+	else
+	{
+		teste = word[1];
+		if ( teste != "!sorteia" )
+			return XCHAT_EAT_NONE;
+	}
+
+	return XCHAT_EAT_PLUGIN; 
+}
+
+void xchat_plugin_get_info(char **name, char **desc, char **version, void **reserved)
+{
+   *name = PNAME;
+   *desc = PDESC;
+   *version = PVERSION;
+}
+
+int xchat_plugin_init(xchat_plugin *plugin_handle,
+                      char **plugin_name,
+                      char **plugin_desc,
+                      char **plugin_version,
+                      char *arg)
+{
+	/* we need to save this for use with any xchat_* functions */
+	ph = plugin_handle;
+
+	/* tell xchat our info */
+	*plugin_name = PNAME;
+	*plugin_desc = PDESC;
+	*plugin_version = PVERSION;
+
+	char *self = "Self";
+
+	xchat_hook_server(ph, "PRIVMSG", XCHAT_PRI_NORM, sorteio, NULL);
+	xchat_hook_command(ph, "", XCHAT_PRI_NORM, sorteio, "", self);
+
+	//xchat_hook_command(ph, "CONFIG", XCHAT_PRI_NORM, config_lond, "Uso: config <opções>; referir ao manual para ver as opções", 0);
+	xchat_printf(ph,"Bringers, Copyright (C) 2007, Renato \"Lond\" Cerqueira");
+	xchat_printf(ph,"This program comes with ABSOLUTELY NO WARRANTY;'.");
+	xchat_printf(ph,"This is free software, and you are welcome to redistribute it");
+	xchat_printf(ph,"under certain conditions.");
+	/*xchat_print(ph,"      :::        ::::::::  ::::    ::: :::::::::");
+	xchat_print(ph,"     :+:       :+:    :+: :+:+:   :+: :+:    :+:");
+	xchat_print(ph,"    +:+       +:+    +:+ :+:+:+  +:+ +:+     +:+");
+	xchat_print(ph,"   +#+       +#+    +:+ +#+ +:+ +#+ +#+     +:+");
+	xchat_print(ph,"  +#+       +#+    +#+ +#+  +#+#+# +#+     +#+");
+	xchat_print(ph," #+#       #+#    #+# #+#   #+#+# #+#    #+#");
+	xchat_print(ph,"########## ########  ###    #### #########");
+	xchat_print(ph,"      ::::::::   ::::::::  :::::::::  ::::::::::: ::::::::: :::::::::::");
+	xchat_print(ph,"    :+:    :+: :+:    :+: :+:    :+:     :+:     :+:    :+:    :+:");
+	xchat_print(ph,"   +:+        +:+        +:+    +:+     +:+     +:+    +:+    +:+");
+	xchat_print(ph,"  +#++:++#++ +#+        +#++:++#:      +#+     +#++:++#+     +#+");
+	xchat_print(ph,"        +#+ +#+        +#+    +#+     +#+     +#+           +#+");
+	xchat_print(ph,"#+#    #+# #+#    #+# #+#    #+#     #+#     #+#           #+#");
+	xchat_print(ph,"########   ########  ###    ### ########### ###           ###");
+	xchat_printf(ph,"                                                     V %s",PVERSION);*/
+	//xchat_print(ph,"Pressione <f9> para configurar");
+
+	return 1;       /* return 1 for success */
+}
 
 #ifdef WIN32
 // Windows

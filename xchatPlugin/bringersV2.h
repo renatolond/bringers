@@ -38,4 +38,4 @@ extern "C"
 			void **reserved);
 }
 
-#endif /* _BRINGERS_DLL_H_
+#endif /* _BRINGERS_DLL_H_ */
