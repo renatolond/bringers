@@ -1,0 +1,1 @@
+Bringers it's a program for Truth or Dare games. It keeps the name of everyone playing and does not choose someone again until everyone has already been choosed.
